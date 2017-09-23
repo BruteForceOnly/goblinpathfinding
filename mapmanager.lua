@@ -247,7 +247,7 @@ function mapmanager.generateMapKey(mapx, mapy)
 --so, -15 to 15 is 30 maps in 1 direction
 --total number of maps is therefore: 30*30 = 900...wow
 --a negative x/y key value is identified by appending 5 to the front of the key value
---mapx, mapy will be multiples of 640 (16 tils * 40 pixels)
+--mapx, mapy will be multiples of 640 (16 tiles * 40 pixels)
 
 	--should add checks for stopping more than 15 maps...?
 	--maybe here, maybe somewhere else~

@@ -13,16 +13,16 @@ function entitymanager.initEntities()
 	entities = {}
 	
 	for k=0,0 do
-		--as per request, there are 5 dumb jameses
+		--make some jameses (goblins)
 		local james = {}
 		james.x = k * 100 + 100
 		james.y = k * 100 + 100
 		james.width = 50
 		james.height = 50
-		james.speed = 20
+		james.speed = 40
 		james.path = {}
-		james.lastUpdate = 0
-		james.pathUpdateRequired = true
+		james.pathUpdateRequired = false
+		james.eType = "goblin"
 		
 		entities[numEntities] = james
 		numEntities = numEntities + 1
@@ -30,6 +30,9 @@ function entitymanager.initEntities()
 	
 	print("horse")
 	
+	--the bag of gold
+	--there is always only one
+	bog = nil
 
 end
 
@@ -42,27 +45,30 @@ function entitymanager.AI(entity, dt)
 	--print("Mouse location: "..adjustedX..","..adjustedY)
 
 	
-	if(currentTime - entity.lastUpdate > 10) then
-		entity.pathUpdateRequired = true
-	end
+	--if(currentTime - entity.lastUpdate > 10) then
+		--entity.pathUpdateRequired = true
+	--end
 	
-	--entitymanager.creep(adjustedX, adjustedY, entity, dt)
-	--print(currentTime - entity.lastUpdate)
-	if(entity.pathUpdateRequired == true) then
-		local testTime1 = love.timer.getTime()
-		entitymanager.findPath(adjustedX, adjustedY, entity)
-		local testTime2 = love.timer.getTime()
-		print("finding path time is:"..testTime2-testTime1)
-		
-		--thereisapath = true
-		for u,menodes in ipairs(entity.path) do
-			print(entity.path[u].id)
+	
+	--if a bag of gold exists
+	if (bog ~= nil) then
+	
+		if(entity.pathUpdateRequired == true) then
+			local testTime1 = love.timer.getTime()
+			entitymanager.findPath(bog.x, bog.y, entity)
+			local testTime2 = love.timer.getTime()
+			print("finding path time is:"..testTime2-testTime1)
+			
+			--thereisapath = true
+			for u,menodes in ipairs(entity.path) do
+				print(entity.path[u].id)
+			end
+			
 		end
-		
-	end
-	if(entity.path ~= nil) then
-		entitymanager.followPath(entity, dt)
-		--entitymanager.findPath(adjustedX, adjustedY, entity)
+		if(entity.path ~= nil) then
+			entitymanager.followPath(entity, dt)
+		end
+	
 	end
 	
 	
@@ -471,6 +477,26 @@ function entitymanager.followPath(entity, dt)
 	
 	end
 	
+end
+
+
+function entitymanager.placeGold(x, y)
+--set location for the bag of gold
+	
+	bog = {}
+	
+	--place bag of gold on the closest tile
+	local index = mapmanagermodule.getMapIndex(x, y)
+	local row, col = mapmanagermodule.getTileIndexes(x, y)
+	
+	bog.x, bog.y = mapmanagermodule.getTileGlobalPosition(index, row, col)
+	
+	--location of gold bag has been changed, so every goblin needs to search for it
+	for k=0, numEntities-1 do
+		entities[k].pathUpdateRequired = true
+	end
+	
+
 end
 
 

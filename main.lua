@@ -7,7 +7,11 @@ function love.load()
 	screenHeight = love.graphics.getHeight()
 	screenWidth = love.graphics.getWidth()
 	
+	--goblin image
 	gobjii = love.graphics.newImage('assets/goblin_old.png')
+	
+	--bag of gold image
+	goldBag = love.graphics.newImage('assets/bagofgold.png')
 	
 	--load tiles
 	mapmanagermodule.loadTiles()
@@ -33,6 +37,10 @@ function love.load()
 	--state stuff
 	statemanagermodule.initStates()
 	
+	--mouse cursors
+	cursorHammer = love.mouse.newCursor('assets/hammer.png', 0, 27)
+	cursorWater = love.mouse.newCursor('assets/water.png', 25, 25)
+	cursorGold = love.mouse.newCursor('assets/bagofgold.png', 25, 25)
 	
 	--test
 	--thereisapath = false
@@ -78,12 +86,21 @@ function love.update(dt)
 	--testing tile editing
 	if love.keyboard.isDown('1') then
 		statemanagermodule.setState("editingTile")
+		love.mouse.setCursor(cursorWater)
 	end
 	
 	--testing open new areas
 	if love.keyboard.isDown('2') then
 		statemanagermodule.setState("openningArea")
+		love.mouse.setCursor(cursorHammer)
 	end
+	
+	--place a bag of gold
+	if love.keyboard.isDown('3') then
+		statemanagermodule.setState("placingGold")
+		love.mouse.setCursor(cursorGold)
+	end
+	
 	
 	--testing global position calculation
 	if love.keyboard.isDown('0') then
@@ -92,7 +109,9 @@ function love.update(dt)
 	
 	--testing my AI
 	for k=0,numEntities-1 do
-		entitymanagermodule.AI(entities[k], dt)
+		if (entities[k].eType == "goblin") then
+			entitymanagermodule.AI(entities[k], dt)
+		end
 	end
 	
 	
@@ -130,11 +149,19 @@ function love.draw(dt)
 	end
 	
 	
-	--draw entities...as goblins
+	--draw entities
 	for q=0,numEntities-1 do
-		love.graphics.draw(gobjii, entities[q].x, entities[q].y)
+		--...as goblins
+		if (entities[q].eType == "goblin") then
+			love.graphics.draw(gobjii, entities[q].x, entities[q].y)
+		end
 	end
 	
+	
+	--draw bag of gold...if it was placed
+	if (bog ~= nil) then
+		love.graphics.draw(goldBag, bog.x, bog.y, 0, 0.8)
+	end
 	
 	--goblins for reference
 	love.graphics.draw(gobjii, 0, 0)
@@ -167,13 +194,17 @@ function love.mousereleased(x, y, button, istouch)
 			end
 		end
 		
-		--gogo open new area
+		--open new area
 		if(statemanagermodule.getState() == "openningArea") then
 			if(mapMetaData[mapIndex].state == "closed") then
 				mapmanagermodule.openArea(mapIndex)
 			end
 		end
 		
+		--place down a bag of gold
+		if (statemanagermodule.getState() == "placingGold") then
+			entitymanagermodule.placeGold(adjustedX, adjustedY)
+		end
 		
 		
 		--testing area
