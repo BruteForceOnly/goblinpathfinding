@@ -90,13 +90,19 @@ function mapmanager.getTileIndexes(x, y)
 	
 	--the index of the map in mapMetaData
 	local mapIndex = mapmanager.getMapIndex(x,y)
-	
-	local thisMapX = mapMetaData[mapIndex].mapX
-	local thisMapY = mapMetaData[mapIndex].mapY
+		
+	--check if the map area exists
+	local outofbounds = mapmanager.mapIndexOutOfBounds(mapIndex)
 
-	row = math.floor( (y - thisMapY)/tileHeight ) + 1
-	col = math.floor( (x - thisMapX)/tileWidth ) + 1
+	if(not outofbounds) then
+		
+		local thisMapX = mapMetaData[mapIndex].mapX
+		local thisMapY = mapMetaData[mapIndex].mapY
+
+		row = math.floor( (y - thisMapY)/tileHeight ) + 1
+		col = math.floor( (x - thisMapX)/tileWidth ) + 1
 	
+	end
 	
 	--print(row..","..col)
 	return row, col
@@ -277,6 +283,16 @@ function mapmanager.generateMapKey(mapx, mapy)
 end
 
 
+function mapmanager.mapIndexOutOfBounds(mapindex)
+--checks if you're out of bounds
+--pretty much the map area doesn't exist
 
+	if( mapindex ~= -1 ) then
+		return false
+	else
+		return true
+	end
+
+end
 
 return mapmanager

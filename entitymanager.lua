@@ -490,18 +490,24 @@ end
 function entitymanager.placeGold(x, y)
 --set location for the bag of gold
 	
-	--place bag of gold on the closest tile
 	local index = mapmanagermodule.getMapIndex(x, y)
 	local row, col = mapmanagermodule.getTileIndexes(x, y)
 	
+	
+	outofbounds = mapmanagermodule.mapIndexOutOfBounds(index, row, col)
+	
 	--only change position of bag of gold if new location is in a pathable cell
-	if(mapmanagermodule.isPathable(index, row, col)) then
+	if( (not outofbounds) and (mapmanagermodule.isPathable(index, row, col)) ) then
 		bog = {}
+		
+		--place bag of gold on the closest tile
 		bog.x, bog.y = mapmanagermodule.getTileGlobalPosition(index, row, col)
 		
 		--location of gold bag has been changed, so every goblin needs to search for it
 		for k=0, numEntities-1 do
-			entities[k].pathUpdateRequired = true
+			if(entities[k].eType == "goblin") then
+				entities[k].pathUpdateRequired = true
+			end
 		end
 	
 	end	
