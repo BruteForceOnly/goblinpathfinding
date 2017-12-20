@@ -7,6 +7,9 @@ function love.load()
 	screenHeight = love.graphics.getHeight()
 	screenWidth = love.graphics.getWidth()
 	
+	--instructions image
+	instructions = love.graphics.newImage('assets/instructions.png')
+	
 	--goblin image
 	gobjii = love.graphics.newImage('assets/goblin_old.png')
 	
@@ -176,6 +179,10 @@ function love.draw(dt)
 
 	--fps
 	love.graphics.print(fps, screenWidth - 50, 0)
+	
+	--instructions
+	love.graphics.draw(instructions, 0, screenHeight - 100)
+	
 end
 
 
