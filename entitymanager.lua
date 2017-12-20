@@ -304,7 +304,7 @@ function entitymanager.findPath(locationX, locationY, entity)
 	--because of the starting node
 	local numNewFrontierNodes = 1
 	
-	while(numFrontierNodes > 0 and destinationNodeFound == false) do
+	while( (numFrontierNodes > 0) and (destinationNodeFound == false) and (endSearch == false) ) do
 		
 		print("iteration: "..counter)
 		
@@ -449,9 +449,16 @@ function entitymanager.findPath(locationX, locationY, entity)
 		
 	
 		counter = counter + 1
+		
+		--give up if more than 100 iterations
+		if(counter > 100) then
+			endSearch = true
+		end
+		
 	end
 	
-
+	--can't find a path, so stop looking
+	entity.pathUpdateRequired = false
 
 end
 
