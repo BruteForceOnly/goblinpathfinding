@@ -42,8 +42,8 @@ function love.load()
 	
 	--mouse cursors
 	cursorHammer = love.mouse.newCursor('assets/hammer.png', 0, 27)
-	cursorWater = love.mouse.newCursor('assets/water.png', 25, 25)
-	cursorGold = love.mouse.newCursor('assets/bagofgold.png', 25, 25)
+	cursorWater = love.mouse.newCursor('assets/water.png', 0, 0)
+	cursorGold = love.mouse.newCursor('assets/bogcursor.png', 0, 0)
 	
 	--test
 	--thereisapath = false
@@ -166,17 +166,12 @@ function love.draw(dt)
 		love.graphics.draw(goldBag, bog.x, bog.y, 0, 0.8)
 	end
 	
-	--goblins for reference
-	love.graphics.draw(gobjii, 0, 0)
-	love.graphics.draw(gobjii, screenWidth/2, screenHeight/2)
-	
 	
 	cameramodule.deactivate()
 
 	
 	--things relative to your screen
-	love.graphics.draw(gobjii, 0, 0)
-
+	
 	--fps
 	love.graphics.print(fps, screenWidth - 50, 0)
 	
