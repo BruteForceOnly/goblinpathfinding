@@ -12,6 +12,7 @@ function love.load()
 	
 	--goblin image
 	gobjii = love.graphics.newImage('assets/goblin_old.png')
+	gobjiiQuestion = love.graphics.newImage('assets/goblin_old_confused.png')
 	
 	--bag of gold image
 	goldBag = love.graphics.newImage('assets/bagofgold.png')
@@ -156,7 +157,11 @@ function love.draw(dt)
 	for q=0,numEntities-1 do
 		--...as goblins
 		if (entities[q].eType == "goblin") then
-			love.graphics.draw(gobjii, entities[q].x, entities[q].y)
+			if(entities[q].confused == true) then
+				love.graphics.draw(gobjiiQuestion, entities[q].x, entities[q].y)
+			else			
+				love.graphics.draw(gobjii, entities[q].x, entities[q].y)
+			end
 		end
 	end
 	

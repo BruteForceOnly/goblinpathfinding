@@ -23,6 +23,7 @@ function entitymanager.initEntities()
 		james.path = {}
 		james.pathUpdateRequired = false
 		james.eType = "goblin"
+		james.confused = false
 		
 		entities[numEntities] = james
 		numEntities = numEntities + 1
@@ -246,6 +247,7 @@ function entitymanager.findPath(locationX, locationY, entity)
 		entity.path[p] = nil
 	end
 	entity.lastUpdate = love.timer.getTime()
+	entity.confused = false
 	
 	--starting location
 	local startX = entity.x
@@ -340,7 +342,7 @@ function entitymanager.findPath(locationX, locationY, entity)
 				end
 				
 				destinationNodeFound = true
-				entity.pathUpdateRequired = false
+				--entity.pathUpdateRequired = false
 				break
 			end
 			
@@ -457,9 +459,13 @@ function entitymanager.findPath(locationX, locationY, entity)
 		
 	end
 	
-	--can't find a path, so stop looking
+	--finished attempt to find a path
 	entity.pathUpdateRequired = false
-
+	
+	if(destinationNodeFound == false) then
+		entity.confused = true
+	end
+	
 end
 
 
