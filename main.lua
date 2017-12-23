@@ -194,31 +194,46 @@ function love.mousereleased(x, y, button, istouch)
 	local mapRow, mapCol = mapmanagermodule.getTileIndexes(adjustedX, adjustedY)
 	
 	if(button == 1) then
-		--change the tile to WATUR
-		if(statemanagermodule.getState() == "editingTile") then
-			if(mapMetaData[mapIndex].state == "open") then
-				mapmanagermodule.setTile(mapIndex, mapRow, mapCol, 2)
+		
+		--make sure you're not out of bounds
+		local outofbounds = mapmanagermodule.mapIndexOutOfBounds(mapIndex)
+		if(not outofbounds) then
+			
+			--change the tile to WATUR or dirt
+			if(statemanagermodule.getState() == "editingTile") then
+				--only allow open area tiles to be changed
+				if(mapMetaData[mapIndex].state == "open") then
+					--dirt to water
+					if(mapMetaData[mapIndex].tileMap[mapRow][mapCol] == 1) then
+						mapmanagermodule.setTile(mapIndex, mapRow, mapCol, 2)
+					--water to dirt
+					elseif(mapMetaData[mapIndex].tileMap[mapRow][mapCol] == 2) then
+						mapmanagermodule.setTile(mapIndex, mapRow, mapCol, 1)
+					end
+				end
 			end
-		end
-		
-		--open new area
-		if(statemanagermodule.getState() == "openningArea") then
-			if(mapMetaData[mapIndex].state == "closed") then
-				mapmanagermodule.openArea(mapIndex)
+			
+			--open new area
+			if(statemanagermodule.getState() == "openningArea") then
+				if(mapMetaData[mapIndex].state == "closed") then
+					mapmanagermodule.openArea(mapIndex)
+				end
 			end
-		end
+			
+			--place down a bag of gold
+			if (statemanagermodule.getState() == "placingGold") then
+				entitymanagermodule.placeGold(adjustedX, adjustedY)
+			end
+			
+			
+			--testing area
+			if(statemanagermodule.getState() == "testtest" ) then
+				--if(mapMetaData[mapIndex].state == "open") then
+					mapmanagermodule.isPathable(mapIndex, mapRow, mapCol)
+				--end
+			end
+			
 		
-		--place down a bag of gold
-		if (statemanagermodule.getState() == "placingGold") then
-			entitymanagermodule.placeGold(adjustedX, adjustedY)
-		end
-		
-		
-		--testing area
-		if(statemanagermodule.getState() == "testtest" ) then
-			--if(mapMetaData[mapIndex].state == "open") then
-				mapmanagermodule.isPathable(mapIndex, mapRow, mapCol)
-			--end
 		end
 		
 		

@@ -500,7 +500,7 @@ function entitymanager.placeGold(x, y)
 	local row, col = mapmanagermodule.getTileIndexes(x, y)
 	
 	
-	outofbounds = mapmanagermodule.mapIndexOutOfBounds(index, row, col)
+	outofbounds = mapmanagermodule.mapIndexOutOfBounds(index)
 	
 	--only change position of bag of gold if new location is in a pathable cell
 	if( (not outofbounds) and (mapmanagermodule.isPathable(index, row, col)) ) then
